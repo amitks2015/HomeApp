@@ -7,12 +7,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.example.homeapp.R
+import com.example.homeapp.navigation.Navigation
 
 @Composable
 fun Home(
     modifier: Modifier = Modifier
 ) {
+    val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     Scaffold(
         modifier = modifier,
@@ -33,7 +36,7 @@ fun Home(
             }
         }
     ) {
-
+        Navigation(navHostController = navController)
     }
 }
 
