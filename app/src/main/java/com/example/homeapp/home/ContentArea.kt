@@ -30,7 +30,7 @@ fun ContentArea(
             Spacer(modifier = Modifier.height(16.dp))
         }
         Text(
-            text = destination.path.uppercase(),
+            text = destination.title,
             fontSize = 16.sp
         )
     }
