@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">HomeApp</string>
     <string name="title_home">Home</string>
+    <string name="label_name">Compose Learning</string>
+    <string name="label_email">compose@learning.com.au</string>
+    <string name="log_out">Log out</string>
+    <string name="not_available">Not available yet!</string>
 
     <string name="cd_create_item">Create a new item</string>
+    <string name="cd_open_menu">Open menu</string>
+    <string name="cd_more_info">More information</string>
 </resources>

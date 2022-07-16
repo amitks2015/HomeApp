@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navigation
 import com.example.homeapp.home.ContentArea
 
 @Composable
@@ -16,24 +17,42 @@ fun Navigation(
     NavHost(
         modifier = modifier,
         navController = navHostController,
-        startDestination = Destination.Feed.path
+        startDestination = Destination.Home.path
     ) {
-        composable(Destination.Feed.path) {
+        navigation(
+            startDestination = Destination.Feed.path,
+            route = Destination.Home.path
+        ) {
+            composable(Destination.Feed.path) {
+                ContentArea(
+                    modifier = Modifier.fillMaxSize(),
+                    destination = Destination.Feed
+                )
+            }
+            composable(Destination.Contacts.path) {
+                ContentArea(
+                    modifier = Modifier.fillMaxSize(),
+                    destination = Destination.Contacts
+                )
+            }
+            composable(Destination.Calendar.path) {
+                ContentArea(
+                    modifier = Modifier.fillMaxSize(),
+                    destination = Destination.Calendar
+                )
+            }
+        }
+
+        composable(Destination.Settings.path) {
             ContentArea(
                 modifier = Modifier.fillMaxSize(),
-                destination = Destination.Feed
+                destination = Destination.Settings
             )
         }
-        composable(Destination.Contacts.path) {
+        composable(Destination.Upgrade.path) {
             ContentArea(
                 modifier = Modifier.fillMaxSize(),
-                destination = Destination.Contacts
-            )
-        }
-        composable(Destination.Calendar.path) {
-            ContentArea(
-                modifier = Modifier.fillMaxSize(),
-                destination = Destination.Calendar
+                destination = Destination.Upgrade
             )
         }
     }
