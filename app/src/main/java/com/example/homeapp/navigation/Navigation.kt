@@ -55,5 +55,17 @@ fun Navigation(
                 destination = Destination.Upgrade
             )
         }
+
+        navigation(
+            startDestination = Destination.Add.path,
+            route = Destination.Creation.path
+        ) {
+            composable(Destination.Add.path) {
+                ContentArea(
+                    modifier = Modifier.fillMaxSize(),
+                    destination = Destination.Add
+                )
+            }
+        }
     }
 }
