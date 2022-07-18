@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -40,39 +38,20 @@ fun Home(
         modifier = modifier,
         scaffoldState = scaffoldState,
         topBar = {
-            val snackBarMessage = stringResource(id = R.string.not_available)
-            TopAppBar(
-                title = {
-                    Text(text = stringResource(id = R.string.title_home))
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            coroutineScope.launch {
-                                drawerState.open()
-                            }
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = stringResource(id = R.string.cd_open_menu)
-                        )
+            DestinationTopBar(
+                destination = currentDestination,
+                openDrawer = {
+                    coroutineScope.launch {
+                        drawerState.open()
                     }
                 },
-                actions = {
-                    if(currentDestination != Destination.Feed) {
-                        IconButton(onClick = {
-                            coroutineScope.launch {
-                                scaffoldState.snackbarHostState
-                                    .showSnackbar(snackBarMessage)
-                            }
-                        }) {
-                            Icon(
-                                imageVector = Icons.Default.Info,
-                                contentDescription = stringResource(id = R.string.cd_more_info)
-                            )
-                        }
+                showSnackBar = { message ->
+                    coroutineScope.launch {
+                        scaffoldState.snackbarHostState.showSnackbar(message)
                     }
+                },
+                onNavigateUp = {
+                    navController.popBackStack()
                 }
             )
         },
@@ -110,6 +89,32 @@ fun Home(
         }
     ) {
         Navigation(navHostController = navController)
+    }
+}
+
+@Composable
+private fun DestinationTopBar(
+    modifier: Modifier = Modifier,
+    destination: Destination,
+    openDrawer: () -> Unit,
+    showSnackBar: (String) -> Unit,
+    onNavigateUp: () -> Unit,
+) {
+    if(destination.isRootDestination) {
+        RootDestinationTopBar(
+            modifier = modifier,
+            currentDestination = destination,
+            openDrawer = openDrawer,
+            showSnackBar = { message ->
+                showSnackBar(message)
+            }
+        )
+    } else {
+        ChildDestinationTopBAr(
+            modifier = modifier,
+            title = destination.title,
+            onNavigateUp = onNavigateUp
+        )
     }
 }
 

@@ -9,4 +9,5 @@
     <string name="cd_create_item">Create a new item</string>
     <string name="cd_open_menu">Open menu</string>
     <string name="cd_more_info">More information</string>
+    <string name="cd_navigate_back">Go back home</string>
 </resources>
