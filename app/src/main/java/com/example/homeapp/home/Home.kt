@@ -1,14 +1,19 @@
 package com.example.homeapp.home
 
+import android.content.res.Configuration
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.homeapp.R
@@ -21,6 +26,7 @@ fun Home(
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
+    val orientation = LocalConfiguration.current.orientation
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scaffoldState = rememberScaffoldState(drawerState)
@@ -56,27 +62,33 @@ fun Home(
             )
         },
         bottomBar = {
-            BottomNavigationBar(
-                currentDestination = currentDestination,
-                onNavigate = {
-                    navController.navigate(it.path) {
-                        popUpTo(navController.graph.findStartDestination().id)
-                        launchSingleTop = true
-                        restoreState = true
+            if(orientation == Configuration.ORIENTATION_PORTRAIT &&
+                    currentDestination.isRootDestination) {
+                BottomNavigationBar(
+                    currentDestination = currentDestination,
+                    onNavigate = {
+                        navController.navigate(it.path) {
+                            popUpTo(navController.graph.findStartDestination().id)
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     }
-                }
-            )
+                )
+            }
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    navController.navigate(Destination.Creation.path)
+            if(orientation == Configuration.ORIENTATION_PORTRAIT &&
+                    currentDestination.isRootDestination) {
+                FloatingActionButton(
+                    onClick = {
+                        navController.navigate(Destination.Creation.path)
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(id = R.string.cd_create_item)
+                    )
                 }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(id = R.string.cd_create_item)
-                )
             }
         },
         drawerContent = {
@@ -92,7 +104,46 @@ fun Home(
             )
         }
     ) {
-        Navigation(navHostController = navController)
+        Body(
+            currentDestination = currentDestination,
+            orientation = orientation,
+            navController = navController,
+            onNavigate = {
+                navController.navigate(it.path) {
+                    popUpTo(navController.graph.findStartDestination().id)
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            },
+            onCreate = {
+                navController.navigate(Destination.Creation.path)
+            }
+        )
+    }
+}
+
+@Composable
+fun Body(
+    modifier: Modifier = Modifier,
+    currentDestination: Destination,
+    orientation: Int,
+    navController: NavHostController,
+    onNavigate: (Destination) -> Unit,
+    onCreate: () -> Unit
+) {
+    Row(
+        modifier = modifier.fillMaxSize()
+    ) {
+        if(currentDestination.isRootDestination &&
+                orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            RailNavigationBar(
+                currentDestination = currentDestination,
+                onNavigate = onNavigate,
+                onCreate = onCreate
+            )
+        }
+        Navigation(
+            navHostController = navController)
     }
 }
 
